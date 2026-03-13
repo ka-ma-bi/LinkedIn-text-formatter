@@ -89,13 +89,10 @@ function applyFormat(type) {
     input.value = newText;
     output.value = newText;
 
+    // Keep cursor position at the end of formatted text, don't move to bottom
     input.focus();
-    input.setSelectionRange(start, start + formatted.length);
-    
-    const formatName = currentFormat === 'bold' && type === 'italic' ? 'bold+italic' :
-                      currentFormat === 'italic' && type === 'bold' ? 'bold+italic' :
-                      type;
-    showNotification(`${formatName} applied ✓`);
+    const newPosition = start + formatted.length;
+    input.setSelectionRange(newPosition, newPosition);
 }
 
 function normalizeText(text) {
@@ -157,7 +154,8 @@ function applyBullet(symbol) {
     output.value = newText;
 
     input.focus();
-    showNotification('Bullets applied ✓');
+    const newPosition = start + formatted.length;
+    input.setSelectionRange(newPosition, newPosition);
 }
 
 function applyBulletFromDropdown() {
