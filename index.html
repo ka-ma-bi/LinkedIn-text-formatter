@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinkedIn Text Formatter</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="logo.svg" alt="LinkedIn Formatter Logo" class="logo">
+            <h1>LinkedIn Text Formatter</h1>
+            <p class="subtitle">Format text that survives LinkedIn posting & scheduling</p>
+        </div>
+
+        <div class="toolbar">
+            <button class="btn" onclick="applyFormat('bold')" title="Bold">𝗕</button>
+            <button class="btn" onclick="applyFormat('italic')" title="Italic">𝘐</button>
+            <button class="btn" onclick="applyFormat('underline')" title="Underline">U̲</button>
+            
+            <div class="separator"></div>
+            
+            <select id="bulletSelect" class="bullet-dropdown" onchange="applyBulletFromDropdown()">
+                <option value="">Select Bullet Style...</option>
+                <optgroup label="💼 Business & Professional">
+                    <option value="📌">📌 Push pin</option>
+                    <option value="📍">📍 Round pin</option>
+                    <option value="💡">💡 Light bulb</option>
+                    <option value="🎯">🎯 Target</option>
+                    <option value="📊">📊 Chart</option>
+                    <option value="🏆">🏆 Trophy</option>
+                    <option value="📈">📈 Trending up</option>
+                    <option value="🔑">🔑 Key point</option>
+                </optgroup>
+                <optgroup label="✅ Tasks & Progress">
+                    <option value="✅">✅ Check mark</option>
+                    <option value="☑️">☑️ Check box</option>
+                    <option value="✔️">✔️ Heavy check</option>
+                    <option value="⭐">⭐ Star</option>
+                    <option value="🌟">🌟 Glowing star</option>
+                    <option value="⚡">⚡ Lightning</option>
+                    <option value="🔥">🔥 Fire</option>
+                    <option value="💪">💪 Strength</option>
+                </optgroup>
+                <optgroup label="🎨 Creative & Modern">
+                    <option value="🔸">🔸 Orange diamond</option>
+                    <option value="🔹">🔹 Blue diamond</option>
+                    <option value="🔶">🔶 Large orange diamond</option>
+                    <option value="🔷">🔷 Large blue diamond</option>
+                    <option value="🟠">🟠 Orange circle</option>
+                    <option value="🟡">🟡 Yellow circle</option>
+                    <option value="🟢">🟢 Green circle</option>
+                    <option value="🔴">🔴 Red circle</option>
+                </optgroup>
+                <optgroup label="📱 Tech & Digital">
+                    <option value="💻">💻 Laptop</option>
+                    <option value="📱">📱 Phone</option>
+                    <option value="⚙️">⚙️ Gear</option>
+                    <option value="🔗">🔗 Link</option>
+                    <option value="🚀">🚀 Rocket</option>
+                    <option value="🤖">🤖 Robot/AI</option>
+                    <option value="🛠️">🛠️ Tools</option>
+                </optgroup>
+                <optgroup label="🌍 Communication">
+                    <option value="💬">💬 Speech bubble</option>
+                    <option value="👉">👉 Pointing right</option>
+                    <option value="➡️">➡️ Arrow right</option>
+                    <option value="🔔">🔔 Bell</option>
+                    <option value="📢">📢 Megaphone</option>
+                    <option value="👁️">👁️ Eye</option>
+                </optgroup>
+                <optgroup label="🎓 Learning & Growth">
+                    <option value="📚">📚 Books</option>
+                    <option value="📖">📖 Open book</option>
+                    <option value="🎓">🎓 Graduation cap</option>
+                    <option value="🧠">🧠 Brain</option>
+                    <option value="🔍">🔍 Search</option>
+                    <option value="🌱">🌱 Growth</option>
+                    <option value="🏅">🏅 Medal</option>
+                </optgroup>
+                <optgroup label="⬢ Safe Unicode Symbols">
+                    <option value="⬢">⬢ Hexagon</option>
+                    <option value="◆">◆ Diamond</option>
+                    <option value="▸">▸ Arrow</option>
+                    <option value="⊙">⊙ Target circle</option>
+                    <option value="✦">✦ Sparkle</option>
+                    <option value="◉">◉ Bullseye</option>
+                    <option value="●">● Dot</option>
+                    <option value="►">► Triangle</option>
+                    <option value="→">→ Right arrow</option>
+                    <option value="★">★ Star</option>
+                </optgroup>
+            </select>
+        </div>
+
+        <textarea id="input" placeholder="Type or paste your text here..."></textarea>
+
+        <div class="output-section">
+            <div class="output-label">
+                <span>Formatted Output:</span>
+                <button class="copy-btn" onclick="copyOutput()">📋 Copy to Clipboard</button>
+            </div>
+            <textarea id="output" readonly placeholder="Your formatted text will appear here..."></textarea>
+        </div>
+
+        <div class="instructions">
+            <h3>📖 How to Use:</h3>
+            <ol>
+                <li>Type or paste your text in the input box above</li>
+                <li>Select the text you want to format</li>
+                <li>Click <strong>B/I/U</strong> for text styles or choose a <strong>bullet icon</strong> from the dropdown</li>
+                <li>Click "Copy to Clipboard"</li>
+                <li>Paste into LinkedIn and post/schedule!</li>
+            </ol>
+        </div>
+    </div>
+
+    <div id="notification" class="notification"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
