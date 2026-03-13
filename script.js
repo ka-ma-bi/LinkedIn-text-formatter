@@ -89,10 +89,10 @@ function applyFormat(type) {
     input.value = newText;
     output.value = newText;
 
-    // Keep cursor position at the end of formatted text, don't move to bottom
-    input.focus();
-    const newPosition = start + formatted.length;
-    input.setSelectionRange(newPosition, newPosition);
+    // Don't refocus - let user stay where they are
+    setTimeout(() => {
+        input.setSelectionRange(start, start + formatted.length);
+    }, 0);
 }
 
 function normalizeText(text) {
@@ -153,9 +153,10 @@ function applyBullet(symbol) {
     input.value = newText;
     output.value = newText;
 
-    input.focus();
-    const newPosition = start + formatted.length;
-    input.setSelectionRange(newPosition, newPosition);
+    // Don't refocus - let user stay where they are
+    setTimeout(() => {
+        input.setSelectionRange(start, start + formatted.length);
+    }, 0);
 }
 
 function applyBulletFromDropdown() {
