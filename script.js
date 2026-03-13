@@ -44,10 +44,9 @@ for (let [normal, boldItalic] of Object.entries(unicodeMaps.boldItalic)) {
 }
 
 const input = document.getElementById('input');
-const output = document.getElementById('output');
 
 input.addEventListener('input', () => {
-    output.value = input.value;
+    // input is the single source of truth
 });
 
 function applyFormat(type) {
@@ -87,12 +86,16 @@ function applyFormat(type) {
 
     const newText = input.value.substring(0, start) + formatted + input.value.substring(end);
     input.value = newText;
-    output.value = newText;
 
-    // Don't refocus - let user stay where they are
-    setTimeout(() => {
+    input.focus();
+    requestAnimationFrame(() => {
         input.setSelectionRange(start, start + formatted.length);
-    }, 0);
+    });
+
+    const formatName = currentFormat === 'bold' && type === 'italic' ? 'bold+italic' :
+                      currentFormat === 'italic' && type === 'bold' ? 'bold+italic' :
+                      type;
+    showNotification(`${formatName} applied ✓`);
 }
 
 function normalizeText(text) {
@@ -151,12 +154,12 @@ function applyBullet(symbol) {
 
     const newText = input.value.substring(0, start) + formatted + input.value.substring(end);
     input.value = newText;
-    output.value = newText;
 
-    // Don't refocus - let user stay where they are
-    setTimeout(() => {
+    input.focus();
+    requestAnimationFrame(() => {
         input.setSelectionRange(start, start + formatted.length);
-    }, 0);
+    });
+    showNotification('Bullets applied ✓');
 }
 
 function applyBulletFromDropdown() {
@@ -170,7 +173,7 @@ function applyBulletFromDropdown() {
 }
 
 function copyOutput() {
-    const text = output.value || input.value;
+    const text = input.value;
     
     if (!text) {
         showNotification('No text to copy');
