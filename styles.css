@@ -171,9 +171,6 @@ textarea::placeholder {
     color: #999;
 }
 
-.output-section {
-    margin-top: 16px;
-}
 
 .output-label {
     font-weight: 600;
