@@ -6,7 +6,7 @@
 
 body {
     font-family: 'Georgia', 'Garamond', 'Times New Roman', serif;
-    background: linear-gradient(135deg, #ff9a56 0%, #ffcc33 100%);
+    background: linear-gradient(135deg, #f5f7fa 0%, #e8ebf0 100%);
     min-height: 100vh;
     display: flex;
     align-items: center;
