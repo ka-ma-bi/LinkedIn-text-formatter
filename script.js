@@ -171,36 +171,31 @@ function applyBulletFromDropdown() {
 
 function copyOutput() {
     const text = input.value;
-    
     if (!text) return;
-
-    navigator.clipboard.writeText(text).then(() => {
-        showNotification('✓ Copied! Paste into LinkedIn');
-    }).catch(() => {
+    navigator.clipboard.writeText(text).catch(() => {
         input.select();
         document.execCommand('copy');
-        showNotification('✓ Copied! Paste into LinkedIn');
     });
 }
 
 function applyIndent() {
-    const start = input.selectionStart;
-    const end = input.selectionEnd;
-    const selectedText = input.value.substring(start, end);
+    const selStart = input.selectionStart;
+    const selEnd = input.selectionEnd;
 
-    if (!selectedText) {
-        showNotification('Please select text first');
-        return;
-    }
+    if (selStart === selEnd) return;
+
+    const text = input.value;
+    const lineStart = text.lastIndexOf('\n', selStart - 1) + 1;
+    const selectedText = text.substring(lineStart, selEnd);
 
     const indent = '    ';
     const formatted = selectedText.split('\n').map(line => indent + line).join('\n');
-    const newText = input.value.substring(0, start) + formatted + input.value.substring(end);
+    const newText = text.substring(0, lineStart) + formatted + text.substring(selEnd);
     input.value = newText;
 
     requestAnimationFrame(() => {
         input.focus();
-        input.setSelectionRange(start, start + formatted.length);
+        input.setSelectionRange(lineStart, lineStart + formatted.length);
     });
 }
 
