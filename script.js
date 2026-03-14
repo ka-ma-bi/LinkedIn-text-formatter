@@ -87,8 +87,8 @@ function applyFormat(type) {
     const newText = input.value.substring(0, start) + formatted + input.value.substring(end);
     input.value = newText;
 
-    input.focus();
     requestAnimationFrame(() => {
+        input.focus();
         input.setSelectionRange(start, start + formatted.length);
     });
 
@@ -152,8 +152,8 @@ function applyBullet(symbol) {
     const newText = input.value.substring(0, start) + formatted + input.value.substring(end);
     input.value = newText;
 
-    input.focus();
     requestAnimationFrame(() => {
+        input.focus();
         input.setSelectionRange(start, start + formatted.length);
     });
 
@@ -198,8 +198,8 @@ function applyIndent() {
     const newText = input.value.substring(0, start) + formatted + input.value.substring(end);
     input.value = newText;
 
-    input.focus();
     requestAnimationFrame(() => {
+        input.focus();
         input.setSelectionRange(start, start + formatted.length);
     });
 }
