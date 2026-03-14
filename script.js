@@ -54,43 +54,46 @@ function applyFormat(type) {
     const end = input.selectionEnd;
     const selectedText = input.value.substring(start, end);
 
-    if (!selectedText) {
-        showNotification('Please select text first');
-        return;
-    }
+    if (!selectedText) return;
 
-    const normalizedText = normalizeText(selectedText);
-    const currentFormat = detectFormat(selectedText);
-    
     let formatted = '';
-    
-    if (type === 'bold') {
-        if (currentFormat === 'bold') {
-            formatted = normalizedText;
-        } else if (currentFormat === 'italic') {
-            formatted = applyUnicodeMap(normalizedText, unicodeMaps.boldItalic);
-        } else if (currentFormat === 'boldItalic') {
-            formatted = applyUnicodeMap(normalizedText, unicodeMaps.italic);
+
+    if (type === 'underline') {
+        formatted = [...selectedText].map(c => c + '\u0332').join('');
+    } else if (type === 'bold') {
+        const hasBold = [...selectedText].some(c => reverseMaps.bold[c] || reverseMaps.boldItalic[c]);
+        if (hasBold) {
+            // remove bold, preserve italic
+            formatted = [...selectedText].map(c => {
+                if (reverseMaps.boldItalic[c]) return unicodeMaps.italic[reverseMaps.boldItalic[c]] || reverseMaps.boldItalic[c];
+                if (reverseMaps.bold[c]) return reverseMaps.bold[c];
+                return c;
+            }).join('');
         } else {
-            formatted = applyUnicodeMap(normalizedText, unicodeMaps.bold);
+            // add bold, preserve italic
+            formatted = [...selectedText].map(c => {
+                if (reverseMaps.italic[c]) return unicodeMaps.boldItalic[reverseMaps.italic[c]] || c;
+                const base = reverseMaps.boldItalic[c] || c;
+                return unicodeMaps.bold[base] || c;
+            }).join('');
         }
     } else if (type === 'italic') {
-        if (currentFormat === 'italic') {
-            formatted = normalizedText;
-        } else if (currentFormat === 'bold') {
-            formatted = applyUnicodeMap(normalizedText, unicodeMaps.boldItalic);
-        } else if (currentFormat === 'boldItalic') {
-            formatted = applyUnicodeMap(normalizedText, unicodeMaps.bold);
+        const hasItalic = [...selectedText].some(c => reverseMaps.italic[c] || reverseMaps.boldItalic[c]);
+        if (hasItalic) {
+            // remove italic, preserve bold
+            formatted = [...selectedText].map(c => {
+                if (reverseMaps.boldItalic[c]) return unicodeMaps.bold[reverseMaps.boldItalic[c]] || reverseMaps.boldItalic[c];
+                if (reverseMaps.italic[c]) return reverseMaps.italic[c];
+                return c;
+            }).join('');
         } else {
-            formatted = applyUnicodeMap(normalizedText, unicodeMaps.italic);
+            // add italic, preserve bold
+            formatted = [...selectedText].map(c => {
+                if (reverseMaps.bold[c]) return unicodeMaps.boldItalic[reverseMaps.bold[c]] || c;
+                const base = reverseMaps.boldItalic[c] || c;
+                return unicodeMaps.italic[base] || c;
+            }).join('');
         }
-    } else if (type === 'underline') {
-        const descenders = new Set(['y','j','p','g','q','f','Y','J','P','G','Q']);
-        formatted = [...selectedText].map(c => {
-            const cp = c.codePointAt(0);
-            if (cp > 0xFFFF || descenders.has(c)) return c;
-            return c + '\u0332';
-        }).join('');
     }
 
     const newText = input.value.substring(0, start) + formatted + input.value.substring(end);
@@ -106,19 +109,15 @@ function applyFormat(type) {
 
 function normalizeText(text) {
     let result = text;
-    
     for (let [bold, normal] of Object.entries(reverseMaps.bold)) {
         result = result.split(bold).join(normal);
     }
-    
     for (let [italic, normal] of Object.entries(reverseMaps.italic)) {
         result = result.split(italic).join(normal);
     }
-    
     for (let [boldItalic, normal] of Object.entries(reverseMaps.boldItalic)) {
         result = result.split(boldItalic).join(normal);
     }
-    
     return result;
 }
 
