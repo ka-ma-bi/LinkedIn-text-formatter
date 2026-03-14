@@ -50,7 +50,7 @@ input.addEventListener('input', () => {
 });
 
 function applyUnderline(text) {
-    return text + '\n' + '⎯'.repeat(40);
+    return Array.from(text).map(c => c + '\u0332').join('');
 }
 
 function getBaseChar(c) {
