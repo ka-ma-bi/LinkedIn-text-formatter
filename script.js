@@ -65,25 +65,31 @@ function applyFormat(type) {
     let formatted = '';
     
     if (type === 'bold') {
-        if (currentFormat === 'italic') {
+        if (currentFormat === 'bold') {
+            formatted = normalizedText;
+        } else if (currentFormat === 'italic') {
             formatted = applyUnicodeMap(normalizedText, unicodeMaps.boldItalic);
-        } else if (currentFormat === 'boldItalic' || currentFormat === 'bold') {
-            formatted = selectedText;
+        } else if (currentFormat === 'boldItalic') {
+            formatted = applyUnicodeMap(normalizedText, unicodeMaps.italic);
         } else {
             formatted = applyUnicodeMap(normalizedText, unicodeMaps.bold);
         }
     } else if (type === 'italic') {
-        if (currentFormat === 'bold') {
+        if (currentFormat === 'italic') {
+            formatted = normalizedText;
+        } else if (currentFormat === 'bold') {
             formatted = applyUnicodeMap(normalizedText, unicodeMaps.boldItalic);
-        } else if (currentFormat === 'boldItalic' || currentFormat === 'italic') {
-            formatted = selectedText;
+        } else if (currentFormat === 'boldItalic') {
+            formatted = applyUnicodeMap(normalizedText, unicodeMaps.bold);
         } else {
             formatted = applyUnicodeMap(normalizedText, unicodeMaps.italic);
         }
     } else if (type === 'underline') {
+        const descenders = new Set(['y','j','p','g','q','f','Y','J','P','G','Q']);
         formatted = [...selectedText].map(c => {
             const cp = c.codePointAt(0);
-            return cp > 0xFFFF ? c : c + '\u0332';
+            if (cp > 0xFFFF || descenders.has(c)) return c;
+            return c + '\u0332';
         }).join('');
     }
 
