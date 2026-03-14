@@ -52,7 +52,7 @@ input.addEventListener('input', () => {
 function applyUnderline(text) {
     return text.split('\n').map(line => {
         const len = Array.from(line).length;
-        return line + '\n' + '‾'.repeat(len);
+        return line + '\n' + '─'.repeat(len);
     }).join('\n');
 }
 
