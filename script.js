@@ -83,7 +83,7 @@ function applyFormat(type) {
     } else if (type === 'underline') {
         formatted = selectedText.split('\n').map(line => {
             const len = [...line].length;
-            return line + '\n' + '‾'.repeat(len);
+            return line + '\n' + '_'.repeat(len);
         }).join('\n');
     }
 
