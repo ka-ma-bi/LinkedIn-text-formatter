@@ -53,9 +53,49 @@ function applyUnderline(text) {
     return Array.from(text).map(c => c + '\u0332').join('');
 }
 
+function getBaseChar(c) {
+    if (reverseMaps.boldItalic[c]) return reverseMaps.boldItalic[c];
+    if (reverseMaps.bold[c])       return reverseMaps.bold[c];
+    if (reverseMaps.italic[c])     return reverseMaps.italic[c];
+    return c;
+}
+
+function getCharStyles(c) {
+    return {
+        bold:   !!(reverseMaps.bold[c]       || reverseMaps.boldItalic[c]),
+        italic: !!(reverseMaps.italic[c]     || reverseMaps.boldItalic[c]),
+    };
+}
+
+function applyStyles(base, options) {
+    if (options.bold && options.italic) return unicodeMaps.boldItalic[base] || base;
+    if (options.bold)                   return unicodeMaps.bold[base]       || base;
+    if (options.italic)                 return unicodeMaps.italic[base]     || base;
+    return base;
+}
+
+function transformText(text, toggleStyle) {
+    const chars = Array.from(text);
+
+    // Detect if the majority already has this style — if so, remove it
+    const styledCount = chars.filter(c => getCharStyles(c)[toggleStyle]).length;
+    const alphaCount  = chars.filter(c => /\p{L}/u.test(c)).length;
+    const removing    = alphaCount > 0 && styledCount >= alphaCount;
+
+    return chars.map(c => {
+        const base    = getBaseChar(c);
+        const styles  = getCharStyles(c);
+        styles[toggleStyle] = !removing;
+        const mapped  = applyStyles(base, styles);
+        // preserve combining underline if present
+        const hasUnderline = c.includes('\u0332') || (c.length > 1 && c.charCodeAt(1) === 0x0332);
+        return hasUnderline ? mapped + '\u0332' : mapped;
+    }).join('');
+}
+
 function applyFormat(type) {
-    const start = input.selectionStart;
-    const end = input.selectionEnd;
+    const start        = input.selectionStart;
+    const end          = input.selectionEnd;
     const selectedText = input.value.substring(start, end);
 
     if (!selectedText) return;
@@ -64,45 +104,13 @@ function applyFormat(type) {
 
     if (type === 'underline') {
         formatted = applyUnderline(selectedText);
-    } else if (type === 'bold') {
-        const hasBold = [...selectedText].some(c => reverseMaps.bold[c] || reverseMaps.boldItalic[c]);
-        if (hasBold) {
-            // remove bold, preserve italic
-            formatted = [...selectedText].map(c => {
-                if (reverseMaps.boldItalic[c]) return unicodeMaps.italic[reverseMaps.boldItalic[c]] || reverseMaps.boldItalic[c];
-                if (reverseMaps.bold[c]) return reverseMaps.bold[c];
-                return c;
-            }).join('');
-        } else {
-            // add bold, preserve italic
-            formatted = [...selectedText].map(c => {
-                if (reverseMaps.italic[c]) return unicodeMaps.boldItalic[reverseMaps.italic[c]] || c;
-                const base = reverseMaps.boldItalic[c] || c;
-                return unicodeMaps.bold[base] || c;
-            }).join('');
-        }
-    } else if (type === 'italic') {
-        const hasItalic = [...selectedText].some(c => reverseMaps.italic[c] || reverseMaps.boldItalic[c]);
-        if (hasItalic) {
-            // remove italic, preserve bold
-            formatted = [...selectedText].map(c => {
-                if (reverseMaps.boldItalic[c]) return unicodeMaps.bold[reverseMaps.boldItalic[c]] || reverseMaps.boldItalic[c];
-                if (reverseMaps.italic[c]) return reverseMaps.italic[c];
-                return c;
-            }).join('');
-        } else {
-            // add italic, preserve bold
-            formatted = [...selectedText].map(c => {
-                if (reverseMaps.bold[c]) return unicodeMaps.boldItalic[reverseMaps.bold[c]] || c;
-                const base = reverseMaps.boldItalic[c] || c;
-                return unicodeMaps.italic[base] || c;
-            }).join('');
-        }
+    } else {
+        formatted = transformText(selectedText, type);
     }
 
-    const newText = input.value.substring(0, start) + formatted + input.value.substring(end);
+    const newText   = input.value.substring(0, start) + formatted + input.value.substring(end);
     const scrollTop = input.scrollTop;
-    input.value = newText;
+    input.value     = newText;
 
     requestAnimationFrame(() => {
         input.focus();
