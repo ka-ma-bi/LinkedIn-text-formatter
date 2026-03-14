@@ -185,8 +185,7 @@ function applyIndent() {
 
     if (!selectedText) return;
 
-    const indent = '    ';
-    const formatted = selectedText.split('\n').map(line => indent + line).join('\n');
+    const formatted = selectedText.split('\n').map(line => `> ${line}`).join('\n');
     const newText = input.value.substring(0, start) + formatted + input.value.substring(end);
     input.value = newText;
 
