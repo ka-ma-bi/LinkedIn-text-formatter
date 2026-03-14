@@ -88,15 +88,14 @@ function applyFormat(type) {
     }
 
     const newText = input.value.substring(0, start) + formatted + input.value.substring(end);
+    const scrollTop = input.scrollTop;
     input.value = newText;
 
     requestAnimationFrame(() => {
         input.focus();
+        input.scrollTop = scrollTop;
         input.setSelectionRange(start, start + formatted.length);
     });
-
-
-}
 
 function normalizeText(text) {
     let result = text;
@@ -153,10 +152,12 @@ function applyBullet(symbol) {
     const formatted = lines.map(line => line.trim() ? `${symbol} ${line.trim()}` : '').filter(l => l).join('\n');
 
     const newText = input.value.substring(0, start) + formatted + input.value.substring(end);
+    const scrollTop = input.scrollTop;
     input.value = newText;
 
     requestAnimationFrame(() => {
         input.focus();
+        input.scrollTop = scrollTop;
         input.setSelectionRange(start, start + formatted.length);
     });
 
@@ -191,10 +192,12 @@ function applyIndent() {
     const lines = selectedText.split('\n');
     const formatted = lines.map((line, i) => i === 0 ? `│ ${line}` : `  ${line}`).join('\n');
     const newText = input.value.substring(0, start) + formatted + input.value.substring(end);
+    const scrollTop = input.scrollTop;
     input.value = newText;
 
     requestAnimationFrame(() => {
         input.focus();
+        input.scrollTop = scrollTop;
         input.setSelectionRange(start, start + formatted.length);
     });
 }
