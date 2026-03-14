@@ -81,7 +81,10 @@ function applyFormat(type) {
             formatted = applyUnicodeMap(normalizedText, unicodeMaps.italic);
         }
     } else if (type === 'underline') {
-        formatted = [...selectedText].map(c => c + '\u0332').join('');
+        formatted = [...selectedText].map(c => {
+            const cp = c.codePointAt(0);
+            return cp > 0xFFFF ? c : c + '\u0332';
+        }).join('');
     }
 
     const newText = input.value.substring(0, start) + formatted + input.value.substring(end);
@@ -188,7 +191,7 @@ function applyIndent() {
     if (!selectedText) return;
 
     const lines = selectedText.split('\n');
-    const formatted = lines.map(line => `│ ${line}`).join('\n');
+    const formatted = lines.map((line, i) => i === 0 ? `│ ${line}` : `  ${line}`).join('\n');
     const newText = input.value.substring(0, start) + formatted + input.value.substring(end);
     const scrollTop = input.scrollTop;
     input.value = newText;
