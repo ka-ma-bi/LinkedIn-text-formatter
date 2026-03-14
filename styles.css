@@ -20,7 +20,7 @@ body {
     box-shadow: 8px 8px 20px rgba(163, 177, 198, 0.3),
                 -8px -8px 20px rgba(255, 255, 255, 0.9);
     padding: 30px;
-    max-width: 900px;
+    max-width: 580px;
     width: 100%;
 }
 
@@ -151,6 +151,37 @@ h1 {
 .bullet-dropdown optgroup {
     font-weight: 600;
     font-style: italic;
+}
+
+.editor-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.editor-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #888;
+}
+
+.clear-btn {
+    padding: 4px 12px;
+    background: none;
+    border: 1px solid rgba(163, 177, 198, 0.4);
+    border-radius: 6px;
+    color: #aaa;
+    cursor: pointer;
+    font-size: 12px;
+    font-family: inherit;
+    transition: all 0.2s ease;
+}
+
+.clear-btn:hover {
+    border-color: #ff9a56;
+    color: #ff9a56;
+    background: rgba(255, 154, 86, 0.05);
 }
 
 textarea {

@@ -92,10 +92,7 @@ function applyFormat(type) {
         input.setSelectionRange(start, start + formatted.length);
     });
 
-    const formatName = currentFormat === 'bold' && type === 'italic' ? 'bold+italic' :
-                      currentFormat === 'italic' && type === 'bold' ? 'bold+italic' :
-                      type;
-    showNotification(`${formatName} applied ✓`);
+
 }
 
 function normalizeText(text) {
@@ -159,7 +156,7 @@ function applyBullet(symbol) {
     requestAnimationFrame(() => {
         input.setSelectionRange(start, start + formatted.length);
     });
-    showNotification('Bullets applied ✓');
+
 }
 
 function applyBulletFromDropdown() {
@@ -175,18 +172,20 @@ function applyBulletFromDropdown() {
 function copyOutput() {
     const text = input.value;
     
-    if (!text) {
-        showNotification('No text to copy');
-        return;
-    }
+    if (!text) return;
 
     navigator.clipboard.writeText(text).then(() => {
         showNotification('✓ Copied! Paste into LinkedIn');
     }).catch(() => {
-        output.select();
+        input.select();
         document.execCommand('copy');
         showNotification('✓ Copied! Paste into LinkedIn');
     });
+}
+
+function clearText() {
+    input.value = '';
+    input.focus();
 }
 
 function showNotification(message) {
