@@ -49,6 +49,10 @@ input.addEventListener('input', () => {
     // input is the single source of truth
 });
 
+function underlineText(text) {
+    return [...text].map(c => c + '\u0332').join('');
+}
+
 function applyFormat(type) {
     const start = input.selectionStart;
     const end = input.selectionEnd;
@@ -59,7 +63,7 @@ function applyFormat(type) {
     let formatted = '';
 
     if (type === 'underline') {
-        formatted = [...selectedText].map(c => c + '\u0332').join('');
+        formatted = underlineText(selectedText);
     } else if (type === 'bold') {
         const hasBold = [...selectedText].some(c => reverseMaps.bold[c] || reverseMaps.boldItalic[c]);
         if (hasBold) {
