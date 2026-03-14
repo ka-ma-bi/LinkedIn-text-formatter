@@ -179,23 +179,20 @@ function copyOutput() {
 }
 
 function applyIndent() {
-    const selStart = input.selectionStart;
-    const selEnd = input.selectionEnd;
+    const start = input.selectionStart;
+    const end = input.selectionEnd;
+    const selectedText = input.value.substring(start, end);
 
-    if (selStart === selEnd) return;
+    if (!selectedText) return;
 
-    const text = input.value;
-    const lineStart = text.lastIndexOf('\n', selStart - 1) + 1;
-    const selectedText = text.substring(lineStart, selEnd);
-
-    const indent = '    ';
-    const formatted = selectedText.split('\n').map(line => indent + line).join('\n');
-    const newText = text.substring(0, lineStart) + formatted + text.substring(selEnd);
+    const lines = selectedText.split('\n');
+    const formatted = lines.map(line => line.trim() ? `▎ ${line.trim()}` : '').filter(l => l).join('\n');
+    const newText = input.value.substring(0, start) + formatted + input.value.substring(end);
     input.value = newText;
 
     requestAnimationFrame(() => {
         input.focus();
-        input.setSelectionRange(lineStart, lineStart + formatted.length);
+        input.setSelectionRange(start, start + formatted.length);
     });
 }
 
