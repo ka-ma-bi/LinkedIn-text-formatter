@@ -96,6 +96,7 @@ function applyFormat(type) {
         input.scrollTop = scrollTop;
         input.setSelectionRange(start, start + formatted.length);
     });
+}
 
 function normalizeText(text) {
     let result = text;
