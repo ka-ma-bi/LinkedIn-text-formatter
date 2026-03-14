@@ -81,7 +81,10 @@ function applyFormat(type) {
             formatted = applyUnicodeMap(normalizedText, unicodeMaps.italic);
         }
     } else if (type === 'underline') {
-        formatted = [...selectedText].map(c => c + '\u0332').join('');
+        formatted = selectedText.split('\n').map(line => {
+            const len = [...line].length;
+            return line + '\n' + '‾'.repeat(len);
+        }).join('\n');
     }
 
     const newText = input.value.substring(0, start) + formatted + input.value.substring(end);
