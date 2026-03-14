@@ -183,6 +183,27 @@ function copyOutput() {
     });
 }
 
+function applyIndent() {
+    const start = input.selectionStart;
+    const end = input.selectionEnd;
+    const selectedText = input.value.substring(start, end);
+
+    if (!selectedText) {
+        showNotification('Please select text first');
+        return;
+    }
+
+    const indent = '    ';
+    const formatted = selectedText.split('\n').map(line => indent + line).join('\n');
+    const newText = input.value.substring(0, start) + formatted + input.value.substring(end);
+    input.value = newText;
+
+    input.focus();
+    requestAnimationFrame(() => {
+        input.setSelectionRange(start, start + formatted.length);
+    });
+}
+
 function clearText() {
     input.value = '';
     input.focus();
