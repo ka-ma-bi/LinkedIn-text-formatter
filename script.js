@@ -185,7 +185,8 @@ function applyIndent() {
 
     if (!selectedText) return;
 
-    const formatted = selectedText.split('\n').map(line => `│ ${line}`).join('\n');
+    const lines = selectedText.split('\n');
+    const formatted = lines.map((line, i) => i === 0 ? `│ ${line}` : `  ${line}`).join('\n');
     const newText = input.value.substring(0, start) + formatted + input.value.substring(end);
     input.value = newText;
 
